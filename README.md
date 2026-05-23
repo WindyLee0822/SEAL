@@ -133,43 +133,27 @@ bash examples/search/retriever/retrieval_launch.sh > retrieval_server.log
 ```
 
 
-# Run Examples
-## RL Training
-We provide out-of-the-box scripts in the ["examples/"](./examples/) directory for training agents in different environments.
-
-Here are some examples:
-### 1. GiGPO
-GiGPO is our novel algorithm designed to support fine-grained credit assignment in long-horizon LLM agent training. It introduces a two-level grouping mechanism:
-- Episode-level groups capture overall task success via total returns (like GRPO).
-- Step-level groups gather repeated states across trajectories to compute relative advantages for individual actions.
-
-GiGPO is fully critic-free, maintains the same GPU memory footprint and LLM rollout cost as GRPO, yet achieves significantly better training efficiency and performance.
+## SEAL
 
 ```bash
 bash examples/gigpo_trainer/run_alfworld.sh # ALFWorld
-```
-```bash
+
 bash examples/gigpo_trainer/run_webshop.sh # WebShop
 ```
-```bash
-bash examples/gigpo_trainer/run_search.sh # Search
+
+The following are some arguments that you might need to adjust during experiments
 ```
-```bash
-bash examples/gigpo_trainer/run_sokoban.sh # Sokoban
-```
-### 2. GRPO
-GRPO is a critic-free algorithm that estimates relative advantages based on a group of full episode trajectories.
-```bash
-bash examples/grpo_trainer/run_alfworld.sh # ALFWorld
-```
-```bash
-bash examples/grpo_trainer/run_webshop.sh # WebShop
+algorithm.adv_estimator=gigpo # gigpo or grpo
+actor_rollout_ref.model.path=Qwen/Qwen2.5-7B-Instruct # model path
+actor_rollout_ref.actor.optim.lr=2e-6  # learning rate
++actor_rollout_ref.actor.porj_layer=3  # the layer number of value head
++actor_rollout_ref.actor.classification_loss_coef=0.02 # weight of classification loss
 ```
 
 
 # Acknowledgement
 
-`verl-agent` codebase is built upon [GIGPO](https://github.com/langfengQ/verl-agent) and [veRL](https://github.com/volcengine/verl). The supported environments are adapted from [ALFWorld](https://github.com/alfworld/alfworld), [Search-R1](https://github.com/PeterGriffinJin/Search-R1),and [WebShop](https://github.com/princeton-nlp/WebShop). We sincerely thank the authors and contributors of these projects for their valuable work and for making their resources publicly available.
+`verl-agent` codebase is built upon [GIGPO](https://github.com/langfengQ/verl-agent), [FlowRL](https://github.com/Xuekai-Zhu/FlowRL) and [veRL](https://github.com/volcengine/verl). The supported environments are adapted from [ALFWorld](https://github.com/alfworld/alfworld), [Search-R1](https://github.com/PeterGriffinJin/Search-R1),and [WebShop](https://github.com/princeton-nlp/WebShop). We sincerely thank the authors and contributors of these projects for their valuable work and for making their resources publicly available.
 
 
 <!--- Citation
