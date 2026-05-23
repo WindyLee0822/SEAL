@@ -508,7 +508,7 @@ class DataParallelPPOActor(BasePPOActor):
                         policy_loss = policy_loss + kl_loss * self.config.kl_loss_coef
                         metrics["actor/kl_loss"] = kl_loss.detach().item()
                         metrics["actor/kl_coef"] = self.config.kl_loss_coef
-                    policy_loss = policy_loss + classification_loss * self.config.get("classification_loss_coef")
+                    policy_loss = policy_loss + classification_loss * self.config.get("classification_loss_coef",0.0)
                     if self.config.use_dynamic_bsz:
                         # relative to the dynamic bsz
                         loss = policy_loss * (len(data) / self.config.ppo_mini_batch_size)
@@ -521,7 +521,7 @@ class DataParallelPPOActor(BasePPOActor):
                         "actor/pg_clipfrac": pg_clipfrac.detach().item(),
                         "actor/ppo_kl": ppo_kl.detach().item(),
                         "actor/pg_clipfrac_lower": pg_clipfrac_lower.detach().item(),
-                        "actor/classification_loss": classification_loss.detach().item()*0.02,
+                        "actor/classification_loss": classification_loss.detach().item() * self.config.get("classification_loss_coef",0.0),
                     }
                     append_to_dict(metrics, data)
 
